@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    container_name: question_bank_bot
+    restart: unless-stopped
+
+    # ── Environment ────────────────────────────────────────────
+    env_file:
+      - .env
+
+    # ── Persistent volumes ─────────────────────────────────────
+    volumes:
+      - uploads_data:/app/uploads      # All PDF files and ZIPs
+      - db_data:/app/database          # SQLite database
+      - logs_data:/app/logs            # Rotating log files
+
+    # ── Logging ────────────────────────────────────────────────
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  uploads_data:
+    driver: local
+  db_data:
+    driver: local
+  logs_data:
+    driver: local
